@@ -36,9 +36,7 @@ For a shorter companion reference, see [docs/rag-techniques-guide.md](docs/rag-t
 12. [Production Examples and Flows](#production-examples-and-flows)
 13. [GraphRAG](#graphrag)
 14. [From RAG to Agents](#from-rag-to-agents)
-15. [How This Repo Maps to the RAG Lifecycle](#how-this-repo-maps-to-the-rag-lifecycle)
-16. [Recommended Next Steps for This Repo](#recommended-next-steps-for-this-repo)
-17. [Key Takeaways](#key-takeaways)
+15. [Key Takeaways](#key-takeaways)
 
 ## What Is RAG?
 
@@ -1583,115 +1581,6 @@ The reason this progression works is simple:
 
 This README covers mainstream production RAG, a high-level GraphRAG overview, and agent-ready RAG. It does not go deep into graph construction pipelines, fine-tuning workflows, or full multi-agent frameworks.
 
-## How This Repo Maps to the RAG Lifecycle
-
-This repo is not yet one clean application. It is more like a course workspace containing source material, labs, helper scripts, and assets. That is still useful because it covers the whole RAG lifecycle.
-
-### Learning modules
-
-| Module | Focus |
-| --- | --- |
-| Module 1 | RAG basics, architecture, and use cases |
-| Module 2 | retrieval foundations, BM25, semantic search, hybrid search, and retriever metrics |
-| Module 3 | vector databases, ANN and HNSW, chunking, query parsing, and reranking |
-| Module 4 | transformers, sampling, prompt engineering, grounding, citations, agentic RAG, and fine-tuning |
-| Module 5 | evaluation, observability, optimization, security, and multimodal RAG |
-
-### Labs
-
-| Lab area | What it teaches |
-| --- | --- |
-| Module 1 labs | simple LLM calls and augmented prompts |
-| Module 2 labs | embeddings, vector similarity, and retrieval metrics on labeled data |
-| Module 3 labs | Weaviate collections, filters, semantic search, BM25, hybrid search, reranking, and chunking experiments |
-| Module 4 labs | generation parameters, conversation context, prompt engineering, classification, and structured outputs |
-| Module 5 labs | tracing and observability with OpenTelemetry and Phoenix |
-
-### Helper scripts
-
-| Component | Role |
-| --- | --- |
-| PDF extraction helpers | extract learning material into text for analysis |
-| Local embedding service | exposes a local vectorization endpoint |
-| Weaviate bootstrap helper | starts embedded Weaviate with local inference wiring |
-| Utility helpers | provide LLM calls, embeddings, Phoenix cleanup, FAQ setup, and comparison helpers |
-
-### Data and assets
-
-| File | Role |
-| --- | --- |
-| `embeddings.joblib` | stored embeddings used in retrieval metric labs |
-| `data.joblib` | supporting dataset asset |
-| `faq.joblib` | FAQ objects for the Weaviate FAQ collection |
-| `20news-bydate_py3.pkz` | 20 Newsgroups dataset asset used in retrieval examples |
-| `large_text.txt` | source text used for chunking experiments |
-
-### What this repo already demonstrates well
-
-- augmented prompting
-- embedding generation
-- retrieval metric calculation
-- vector database usage with Weaviate
-- chunking experiments
-- hybrid and reranked retrieval
-- prompt engineering
-- structured outputs
-- Phoenix tracing and instrumentation
-
-### What is still missing if this becomes a real product repo later
-
-- a single clean application entry point
-- unified dependency management
-- one canonical `utils.py` instead of multiple exported variants
-- a documented ingestion pipeline for a real domain corpus
-- a repeatable offline evaluation suite
-- production deployment configuration
-
-## Recommended Next Steps for This Repo
-
-If the goal is to turn this into a serious public learning repo and then build several RAG systems on top of it, the best sequence is:
-
-### Phase 1: Keep this repo as the knowledge base and learning reference
-
-- keep the PDFs, extracted text, and notebooks
-- keep this README as the conceptual backbone
-- avoid mixing product code into the same top-level structure immediately
-
-### Phase 2: Build one clean baseline RAG app
-
-Suggested first system:
-
-- FAQ or support-document RAG
-
-Why:
-
-- easy to evaluate
-- naturally citation-friendly
-- repeated user questions make caching useful
-- routing and hybrid search are easy to demonstrate
-
-### Phase 3: Add a stronger second system
-
-Suggested options:
-
-- codebase RAG
-- PDF or slide RAG
-- policy or compliance assistant
-
-### Phase 4: Add an evaluation harness
-
-Build a small but disciplined evaluation dataset with:
-
-- representative questions
-- expected sources
-- expected answer style
-- edge cases
-- adversarial prompts
-
-### Phase 5: Add observability from day one
-
-Do not wait until the system is "done" to add tracing. The Module 5 notebook is correct: observability is how RAG systems improve in the real world.
-
 ## Key Takeaways
 
 RAG is not just "embed documents and call an LLM." The material in this repo shows that serious RAG systems are built from several interacting parts:
@@ -1724,4 +1613,4 @@ They do not assume:
 
 They evaluate, trace, iterate, and simplify wherever possible.
 
-If you later publish this repo and then build real RAG systems on top of it, this README should give readers the conceptual map they need before they touch implementation.
+This README should give readers the conceptual map they need before they start building real RAG systems.
