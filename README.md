@@ -23,6 +23,8 @@ It also aligns with a few official references that reflect common production pat
 - Weaviate hybrid search docs: <https://docs.weaviate.io/weaviate/search/hybrid>
 - Arize Phoenix docs: <https://arize.com/docs/phoenix>
 
+For a shorter companion reference, see [docs/rag-techniques-guide.md](docs/rag-techniques-guide.md).
+
 ## Table of Contents
 
 1. [What Is RAG?](#what-is-rag)
