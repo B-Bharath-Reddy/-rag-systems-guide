@@ -9,12 +9,7 @@ This repository contains five module PDFs, supporting lab notebooks, and utility
 - which techniques matter in production
 - what a mature, production-minded RAG stack looks like
 
-The write-up is based primarily on the local course materials in this repo:
-
-- `RAG_M1.pdf` to `RAG_M5.pdf`
-- `RAG_M1_content.txt` to `RAG_M5_content.txt`
-- the `C1M*_Ungraded_Lab_*.ipynb` notebooks
-- the supporting Python scripts in the repo
+The write-up is based primarily on the five learning modules in this repo, their extracted text notes, the accompanying hands-on labs, and the local helper code used to demonstrate retrieval, generation, evaluation, and observability.
 
 It also aligns with a few official references that reflect common production patterns:
 
@@ -39,10 +34,11 @@ For a shorter companion reference, see [docs/rag-techniques-guide.md](docs/rag-t
 10. [What Mature Teams Usually Do](#what-mature-teams-usually-do)
 11. [Production Patterns Seen in Major Platforms](#production-patterns-seen-in-major-platforms)
 12. [Production Examples and Flows](#production-examples-and-flows)
-13. [From RAG to Agents](#from-rag-to-agents)
-14. [How This Repo Maps to the RAG Lifecycle](#how-this-repo-maps-to-the-rag-lifecycle)
-15. [Recommended Next Steps for This Repo](#recommended-next-steps-for-this-repo)
-16. [Key Takeaways](#key-takeaways)
+13. [GraphRAG](#graphrag)
+14. [From RAG to Agents](#from-rag-to-agents)
+15. [How This Repo Maps to the RAG Lifecycle](#how-this-repo-maps-to-the-rag-lifecycle)
+16. [Recommended Next Steps for This Repo](#recommended-next-steps-for-this-repo)
+17. [Key Takeaways](#key-takeaways)
 
 ## What Is RAG?
 
@@ -1453,6 +1449,88 @@ Strong answer behavior:
 - chart and caption coverage
 - multimodal grounding quality
 
+## GraphRAG
+
+GraphRAG is a retrieval pattern that adds a graph layer on top of your knowledge base so the system can reason over entities, relationships, and multi-hop connections across documents.
+
+Standard RAG is usually strongest when the answer lives in a few chunks that can be retrieved directly. GraphRAG becomes attractive when the answer depends on relationships spread across many sources.
+
+### When GraphRAG helps
+
+Use GraphRAG when questions look like this:
+
+- "How are these teams, systems, and incidents connected?"
+- "What changed across related policies over time?"
+- "Which suppliers, products, and regions are affected by the same issue?"
+- "Summarize the main themes across this whole body of research."
+
+It is especially useful for:
+
+- enterprise knowledge maps
+- research and literature synthesis
+- compliance and policy linkage
+- incident and dependency analysis
+- relationship-heavy document collections
+
+### Core GraphRAG idea
+
+Instead of storing only chunks and vectors, you also build a graph containing:
+
+- entities
+- relationships
+- document references
+- communities or clusters
+- optional summaries at graph or community level
+
+Typical flow:
+
+```text
+documents
+  -> extract entities and relationships
+  -> build graph nodes and edges
+  -> link graph elements back to source documents
+  -> create summaries or community views
+
+query
+  -> detect entities and intent
+  -> retrieve graph neighborhoods or communities
+  -> retrieve supporting source chunks
+  -> synthesize answer with both relationship context and evidence
+```
+
+### GraphRAG vs standard RAG
+
+| Pattern | Best for | Tradeoff |
+| --- | --- | --- |
+| Standard RAG | direct fact lookup, local context answers | weaker for cross-document relationship reasoning |
+| GraphRAG | multi-hop reasoning, relationship discovery, corpus-level synthesis | more complex ingestion and maintenance |
+
+### Practical recommendation
+
+Do not start with GraphRAG unless the problem clearly needs it.
+
+Best order:
+
+1. Build standard production RAG first.
+2. Measure where direct retrieval fails.
+3. Add GraphRAG when the failures are caused by missing relationship structure rather than weak chunk retrieval.
+
+### Example GraphRAG flow
+
+User question:
+
+```text
+Which services were indirectly affected by the payments outage, and which teams owned those dependencies?
+```
+
+Strong GraphRAG behavior:
+
+- identify the outage entity
+- traverse related services and dependency edges
+- collect team ownership links
+- retrieve source incidents or runbooks for evidence
+- generate a grounded answer with relationship-aware reasoning
+
 ## From RAG to Agents
 
 RAG should usually come before agents, not after them.
@@ -1503,50 +1581,40 @@ The reason this progression works is simple:
 
 ### Scope note
 
-This README covers mainstream production RAG and agent-ready RAG. GraphRAG is a separate advanced topic and is better treated as its own extension once the baseline retrieval, evaluation, and observability stack is already solid.
+This README covers mainstream production RAG, a high-level GraphRAG overview, and agent-ready RAG. It does not go deep into graph construction pipelines, fine-tuning workflows, or full multi-agent frameworks.
 
 ## How This Repo Maps to the RAG Lifecycle
 
 This repo is not yet one clean application. It is more like a course workspace containing source material, labs, helper scripts, and assets. That is still useful because it covers the whole RAG lifecycle.
 
-### Module PDFs and extracted text
+### Learning modules
 
-| File | Focus |
+| Module | Focus |
 | --- | --- |
-| `RAG_M1.pdf` | RAG basics, architecture, use cases |
-| `RAG_M2.pdf` | retrieval foundations, BM25, semantic search, hybrid search, retriever metrics |
-| `RAG_M3.pdf` | vector databases, ANN/HNSW, chunking, query parsing, reranking |
-| `RAG_M4.pdf` | transformers, sampling, prompt engineering, grounding, citations, agentic RAG, fine-tuning |
-| `RAG_M5.pdf` | evaluation, observability, optimization, security, multimodal RAG |
+| Module 1 | RAG basics, architecture, and use cases |
+| Module 2 | retrieval foundations, BM25, semantic search, hybrid search, and retriever metrics |
+| Module 3 | vector databases, ANN and HNSW, chunking, query parsing, and reranking |
+| Module 4 | transformers, sampling, prompt engineering, grounding, citations, agentic RAG, and fine-tuning |
+| Module 5 | evaluation, observability, optimization, security, and multimodal RAG |
 
-The `RAG_M*_content.txt` files are text extractions of those PDFs.
+### Labs
 
-### Notebooks
-
-| Notebook | What it teaches |
+| Lab area | What it teaches |
 | --- | --- |
-| `C1M1_Ungraded_Lab_2 (1).ipynb` | simple LLM calls and augmented prompts |
-| `C1M2_Ungraded_Lab_1 (1).ipynb` | embeddings, cosine similarity, retrieval by vector similarity |
-| `C1M2_Ungraded_Lab_2.ipynb` | retrieval metrics on a labeled dataset |
-| `C1M3_Ungraded_Lab_1 (1).ipynb` | Weaviate collections, filters, semantic search, BM25, hybrid search, reranking |
-| `C1M3_Ungraded_Lab_2.ipynb` | chunking strategies and their effect on retrieval |
-| `C1M4_Ungraded_Lab_1.ipynb` | generation parameters, conversation context, sampling |
-| `C1M4_Ungraded_Lab_2.ipynb` | prompt engineering, classification, structured outputs |
-| `C1M5_Ungraded_Lab_1 (1).ipynb` | tracing and observability with OpenTelemetry and Phoenix |
+| Module 1 labs | simple LLM calls and augmented prompts |
+| Module 2 labs | embeddings, vector similarity, and retrieval metrics on labeled data |
+| Module 3 labs | Weaviate collections, filters, semantic search, BM25, hybrid search, reranking, and chunking experiments |
+| Module 4 labs | generation parameters, conversation context, prompt engineering, classification, and structured outputs |
+| Module 5 labs | tracing and observability with OpenTelemetry and Phoenix |
 
-### Supporting scripts
+### Helper scripts
 
-| File | Role |
+| Component | Role |
 | --- | --- |
-| `extract_pdfs.py` | extracts PDF text using `PyPDF2` |
-| `extract_pdfs_pymupdf.py` | extracts PDF text using `PyMuPDF` |
-| `weaviate_server.py` | starts embedded Weaviate configured to call a local transformer inference endpoint |
-| `flask_app (1).py` | exposes a local `/vectors` endpoint that returns embeddings |
-| `flask_app (2).py` | similar local vectorization endpoint variant |
-| `utils (2).py` | helper functions for LLM calls, embeddings, Phoenix cleanup, FAQ collection setup |
-| `utils (3).py` | helper functions plus notebook UI for comparing retrieval approaches |
-| `utils (4).py` | generation and conversation helper functions |
-| `utils (5).py` | near-duplicate of `utils (4).py` |
+| PDF extraction helpers | extract learning material into text for analysis |
+| Local embedding service | exposes a local vectorization endpoint |
+| Weaviate bootstrap helper | starts embedded Weaviate with local inference wiring |
+| Utility helpers | provide LLM calls, embeddings, Phoenix cleanup, FAQ setup, and comparison helpers |
 
 ### Data and assets
 

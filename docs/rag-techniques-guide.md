@@ -108,6 +108,70 @@ retrieve top 20
   -> send only those to the LLM
 ```
 
+## GraphRAG
+
+Use GraphRAG when the answer depends on relationships across multiple documents rather than one local chunk.
+
+Good fit:
+
+- dependency analysis
+- incident relationship mapping
+- policy linkage
+- enterprise knowledge graphs
+- research synthesis across many sources
+
+Typical pattern:
+
+```text
+documents
+  -> extract entities and relationships
+  -> build graph
+  -> connect graph items back to source chunks
+
+query
+  -> find entities
+  -> traverse relevant graph neighborhood
+  -> retrieve supporting chunks
+  -> synthesize grounded answer
+```
+
+Default recommendation:
+
+- do not start here
+- add GraphRAG after standard production RAG if your failures are mostly multi-hop or relationship-based
+
+## Agentic RAG
+
+Agentic RAG means retrieval is one part of a larger workflow that may also include:
+
+- routing
+- tool use
+- verification
+- planning
+- synthesis
+
+Useful pattern:
+
+```text
+router
+  -> retrieval path
+  -> SQL or API tool path
+  -> verifier
+  -> final answer
+```
+
+Use it when:
+
+- there are multiple valid execution paths
+- some questions need tools, not just retrieval
+- responses need verification before returning
+
+Default recommendation:
+
+- stabilize retrieval first
+- add agent steps only when direct grounded answering stops being enough
+- keep routing and verification models small if possible
+
 ## Prompting Rules for Factual RAG
 
 Always tell the model to:
@@ -228,9 +292,8 @@ Use this order unless you have a strong reason not to:
 
 ## Not Covered Here
 
-This quick reference does not go deep on:
+This quick reference includes high-level guidance on GraphRAG and agentic RAG, but it does not go deep on:
 
-- GraphRAG
 - fine-tuning workflows
 - full agent frameworks
 - domain-specific compliance architectures
